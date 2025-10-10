@@ -158,30 +158,26 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
             </div>
 
             <div>
-              <p className="text-sm font-medium text-gray-600 mb-2">Parts Bought</p>
-              <div className="flex flex-wrap gap-2">
-                {parseJsonArray(searchResult.parts_bought).map((part, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium"
-                  >
-                    {part}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm font-medium text-gray-600 mb-2">Part Serial Numbers</p>
-              <div className="flex flex-wrap gap-2">
-                {parseJsonArray(searchResult.part_serial_numbers).map((serial, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-mono"
-                  >
-                    {serial}
-                  </span>
-                ))}
+              <p className="text-sm font-medium text-gray-600 mb-3">Parts & Serial Numbers</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {parseJsonArray(searchResult.parts_bought).map((part, index) => {
+                  const serials = parseJsonArray(searchResult.part_serial_numbers);
+                  return (
+                    <div
+                      key={index}
+                      className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 hover:border-red-600 transition-colors"
+                    >
+                      <div className="mb-2">
+                        <p className="text-xs font-medium text-gray-500 uppercase">Part</p>
+                        <p className="text-base font-semibold text-black mt-1">{part}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-gray-500 uppercase">Serial Number</p>
+                        <p className="text-sm font-mono text-gray-800 mt-1">{serials[index] || 'N/A'}</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 

@@ -6,36 +6,35 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       vin_records: {
         Row: {
           id: string
+          created_at?: string
           vin_number: string
           client_name: string
-          parts_bought: Json
-          part_serial_numbers: Json
-          created_at: string
-          updated_at: string
+          parts_bought: string[]
+          part_serial_numbers: string[]
+          part_prices: number[]
+          license_plate: string | null
         }
         Insert: {
-          id?: string
           vin_number: string
           client_name: string
-          parts_bought: Json
-          part_serial_numbers: Json
-          created_at?: string
-          updated_at?: string
+          parts_bought: string[]
+          part_serial_numbers: string[]
+          part_prices: number[]
+          license_plate?: string | null
         }
         Update: {
-          id?: string
           vin_number?: string
           client_name?: string
-          parts_bought?: Json
-          part_serial_numbers?: Json
-          created_at?: string
-          updated_at?: string
+          parts_bought?: string[]
+          part_serial_numbers?: string[]
+          part_prices?: number[]
+          license_plate?: string | null
         }
       }
     }

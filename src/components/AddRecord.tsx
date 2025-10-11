@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { Plus, X, Save, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Plus, X, Save, AlertCircle, Loader2 } from 'lucide-react';
 
 interface AddRecordProps {
   onRecordAdded?: () => void;
@@ -11,19 +12,22 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
   const [clientName, setClientName] = useState('');
   const [parts, setParts] = useState<string[]>(['']);
   const [serials, setSerials] = useState<string[]>(['']);
+  const [prices, setPrices] = useState<string[]>(['']);
+  const [licensePlate, setLicensePlate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const addPartField = () => {
     setParts([...parts, '']);
     setSerials([...serials, '']);
+    setPrices([...prices, '']);
   };
 
   const removePartField = (index: number) => {
     if (parts.length > 1) {
       setParts(parts.filter((_, i) => i !== index));
       setSerials(serials.filter((_, i) => i !== index));
+      setPrices(prices.filter((_, i) => i !== index));
     }
   };
 
@@ -39,18 +43,25 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
     setSerials(newSerials);
   };
 
+  const updatePrice = (index: number, value: string) => {
+    const newPrices = [...prices];
+    newPrices[index] = value;
+    setPrices(newPrices);
+  };
+
   const resetForm = () => {
     setVinNumber('');
     setClientName('');
     setParts(['']);
     setSerials(['']);
+    setPrices(['']);
+    setLicensePlate('');
     setError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setSuccess(false);
 
     if (!vinNumber.trim()) {
       setError('VIN number is required');
@@ -64,6 +75,15 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
 
     const filteredParts = parts.filter((p) => p.trim() !== '');
     const filteredSerials = serials.filter((s) => s.trim() !== '');
+    const filteredPrices = prices
+      .filter((p) => p.trim() !== '')
+      .map(price => Number(price)); // Convert strings to numbers
+
+    // Validate prices
+    if (filteredPrices.some(price => isNaN(price))) {
+      setError('All prices must be valid numbers');
+      return;
+    }
 
     if (filteredParts.length === 0) {
       setError('At least one part is required');
@@ -75,37 +95,60 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
       return;
     }
 
+    // Add price validation
+    if (filteredPrices.length === 0) {
+      setError('At least one price is required');
+      return;
+    }
+
     if (filteredParts.length !== filteredSerials.length) {
       setError('Number of parts must match number of serial numbers');
+      return;
+    }
+
+    if (filteredParts.length !== filteredPrices.length) {
+      setError('Each part must have a price');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const { error: insertError } = await supabase.from('vin_records').insert({
+      // Log the data being sent
+      const recordData = {
         vin_number: vinNumber.trim().toUpperCase(),
+        license_plate: licensePlate.trim().toUpperCase(),
         client_name: clientName.trim(),
         parts_bought: filteredParts,
         part_serial_numbers: filteredSerials,
-      });
+        part_prices: filteredPrices, // Now this is an array of numbers
+      };
+      
+      console.log('Sending data:', recordData);
+
+      const { data, error: insertError } = await supabase
+        .from('vin_records')
+        .insert(recordData)
+        .select()
+        .single();
 
       if (insertError) {
+        console.error('Supabase error:', insertError);
         if (insertError.code === '23505') {
           throw new Error('VIN number already exists in the system');
         }
-        throw insertError;
+        throw new Error(`Database error: ${insertError.message}`);
       }
 
-      setSuccess(true);
+      console.log('Success response:', data);
+      toast.success('Client adaugat cu succes');
       resetForm();
       onRecordAdded?.();
-
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save record');
+      console.error('Full error:', err);
+      const message = err instanceof Error ? err.message : 'O eroare a aparut. Incearca din nou.';
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -113,16 +156,6 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
 
   return (
     <div className="space-y-6">
-      {success && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
-          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="text-green-800 font-medium">Record saved successfully!</p>
-            <p className="text-green-700 text-sm">The VIN record has been added to the database.</p>
-          </div>
-        </div>
-      )}
-
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
@@ -132,13 +165,13 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
 
       <form onSubmit={handleSubmit} className="bg-white border-2 border-black rounded-lg shadow-lg overflow-hidden">
         <div className="bg-black text-white px-6 py-4">
-          <h3 className="text-lg font-bold">Add New VIN Record</h3>
+          <h3 className="text-lg font-bold">Adauga Client Nou</h3>
         </div>
 
         <div className="p-6 space-y-6">
           <div>
             <label htmlFor="vin" className="block text-sm font-medium text-gray-700 mb-2">
-              VIN Number <span className="text-red-600">*</span>
+              Serie de Sasiu <span className="text-red-600">*</span>
             </label>
             <input
               id="vin"
@@ -154,7 +187,7 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
 
           <div>
             <label htmlFor="client" className="block text-sm font-medium text-gray-700 mb-2">
-              Client Name <span className="text-red-600">*</span>
+              Nume Client <span className="text-red-600">*</span>
             </label>
             <input
               id="client"
@@ -164,6 +197,21 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
               placeholder="Enter client name..."
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
               required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="license-plate" className="block text-sm font-medium text-gray-700 mb-2">
+              License Plate
+            </label>
+            <input
+              id="license-plate"
+              type="text"
+              value={licensePlate}
+              onChange={(e) => setLicensePlate(e.target.value)}
+              placeholder="Enter license plate..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
+              maxLength={10}
             />
           </div>
 
@@ -202,6 +250,18 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
                       onChange={(e) => updateSerial(index, e.target.value)}
                       placeholder="Serial number..."
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent font-mono"
+                      required
+                    />
+                  </div>
+                  <div className="w-32">
+                    <input
+                      type="number"
+                      value={prices[index]}
+                      onChange={(e) => updatePrice(index, e.target.value)}
+                      placeholder="Price..."
+                      min="0"
+                      step="0.01"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
                       required
                     />
                   </div>

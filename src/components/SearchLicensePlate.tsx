@@ -5,45 +5,44 @@ import type { VinRecord } from '../lib/database.types';
 import { AddPartModal } from './AddPartModal';
 import { RemovePartModal } from './RemovePartModal';
 
-interface SearchVINProps {
+interface SearchLicensePlateProps {
   onDeleteSuccess?: () => void;
 }
 
-export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
+export function SearchLicensePlate({ onDeleteSuccess }: SearchLicensePlateProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResult, setSearchResult] = useState<VinRecord | null>(null);
+  const [searchResults, setSearchResults] = useState<VinRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
-  const [showAddPartModal, setShowAddPartModal] = useState(false);
-  const [showRemovePartModal, setShowRemovePartModal] = useState(false);
+  const [showAddPartModal, setShowAddPartModal] = useState<string | null>(null); // Store record ID
+  const [showRemovePartModal, setShowRemovePartModal] = useState<string | null>(null); // Store record ID
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!searchQuery.trim()) {
-      setError('Please enter a VIN number');
+      setError('Please enter a license plate number');
       return;
     }
 
     setIsLoading(true);
     setError(null);
     setNotFound(false);
-    setSearchResult(null);
+    setSearchResults([]);
 
     try {
       const { data, error: searchError } = await supabase
         .from('vin_records')
         .select('*')
-        .eq('vin_number', searchQuery.trim().toUpperCase())
-        .maybeSingle();
+        .ilike('license_plate', searchQuery.trim().toUpperCase());
 
       if (searchError) {
         throw searchError;
       }
 
-      if (data) {
-        setSearchResult(data);
+      if (data && data.length > 0) {
+        setSearchResults(data);
       } else {
         setNotFound(true);
       }
@@ -72,8 +71,7 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
         throw deleteError;
       }
 
-      setSearchResult(null);
-      setSearchQuery('');
+      setSearchResults(prev => prev.filter(record => record.id !== id));
       onDeleteSuccess?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete record');
@@ -93,18 +91,18 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
     <div className="space-y-6">
       <form onSubmit={handleSearch} className="space-y-4">
         <div>
-          <label htmlFor="vin-search" className="block text-sm font-medium text-gray-700 mb-2">
-            Search by VIN Number
+          <label htmlFor="license-plate-search" className="block text-sm font-medium text-gray-700 mb-2">
+            Search by License Plate
           </label>
           <div className="flex gap-2">
             <input
-              id="vin-search"
+              id="license-plate-search"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Enter VIN number..."
+              placeholder="Enter license plate..."
               className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
-              maxLength={17}
+              maxLength={10}
             />
             <button
               type="submit"
@@ -132,31 +130,32 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
       {notFound && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-          <p className="text-yellow-800">No results found for VIN: {searchQuery}</p>
+          <p className="text-yellow-800">No results found for license plate: {searchQuery}</p>
         </div>
       )}
 
-      {searchResult && (
-        <div className="bg-white border-2 border-black rounded-lg shadow-lg overflow-hidden">
+      {searchResults.map((result) => (
+        <div key={result.id} className="bg-white border-2 border-black rounded-lg shadow-lg overflow-hidden">
+          {/* Rest of the record display is identical to SearchVIN */}
           <div className="bg-black text-white px-6 py-4 flex items-center justify-between">
-            <h3 className="text-lg font-bold">VIN Record Details</h3>
+            <h3 className="text-lg font-bold">Vehicle Record Details</h3>
             <div className="flex gap-2">
               <button
-                onClick={() => setShowAddPartModal(true)}
+                onClick={() => setShowAddPartModal(result.id)}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 text-sm"
               >
                 <Plus className="w-4 h-4" />
                 Add Part
               </button>
               <button
-                onClick={() => setShowRemovePartModal(true)}
+                onClick={() => setShowRemovePartModal(result.id)}
                 className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors flex items-center gap-2 text-sm"
               >
                 <Minus className="w-4 h-4" />
                 Remove Part
               </button>
               <button
-                onClick={() => handleDelete(searchResult.id)}
+                onClick={() => handleDelete(result.id)}
                 disabled={isLoading}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2 text-sm"
               >
@@ -166,31 +165,33 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
             </div>
           </div>
 
+          {/* Record details section */}
           <div className="p-6 space-y-4">
-            <div>
-              <p className="text-sm font-medium text-gray-600">VIN Number</p>
-              <p className="text-lg font-mono font-bold text-black">{searchResult.vin_number}</p>
-            </div>
-
             <div>
               <p className="text-sm font-medium text-gray-600">License Plate</p>
               <p className="text-lg font-mono font-bold text-black">
-                {searchResult.license_plate || 'N/A'}
+                {result.license_plate || 'N/A'}
               </p>
             </div>
 
             <div>
-              <p className="text-sm font-medium text-gray-600">Client Name</p>
-              <p className="text-lg text-black">{searchResult.client_name}</p>
+              <p className="text-sm font-medium text-gray-600">VIN Number</p>
+              <p className="text-lg font-mono font-bold text-black">{result.vin_number}</p>
             </div>
 
             <div>
+              <p className="text-sm font-medium text-gray-600">Client Name</p>
+              <p className="text-lg text-black">{result.client_name}</p>
+            </div>
+
+            {/* Parts section */}
+            <div>
               <p className="text-sm font-medium text-gray-600 mb-3">Detalii</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {parseJsonArray(searchResult.parts_bought).map((part, index) => {
-                  const serials = parseJsonArray(searchResult.part_serial_numbers);
-                  const prices = Array.isArray(searchResult.part_prices) 
-                    ? searchResult.part_prices 
+                {parseJsonArray(result.parts_bought).map((part, index) => {
+                  const serials = parseJsonArray(result.part_serial_numbers);
+                  const prices = Array.isArray(result.part_prices) 
+                    ? result.part_prices 
                     : [];
                   
                   return (
@@ -220,27 +221,27 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
 
             <div className="pt-4 border-t border-gray-200">
               <p className="text-xs text-gray-500">
-                Created: {new Date(searchResult.created_at).toLocaleString()}
+                Created: {new Date(result.created_at).toLocaleString()}
               </p>
             </div>
           </div>
         </div>
-      )}
+      ))}
 
-      {showAddPartModal && searchResult && (
+      {showAddPartModal && (
         <AddPartModal
-          vinRecord={searchResult}
-          onClose={() => setShowAddPartModal(false)}
+          vinRecord={searchResults.find(r => r.id === showAddPartModal)!}
+          onClose={() => setShowAddPartModal(null)}
           onSuccess={() => {
             handleSearch(new Event('submit') as any);
           }}
         />
       )}
 
-      {showRemovePartModal && searchResult && (
+      {showRemovePartModal && (
         <RemovePartModal
-          vinRecord={searchResult}
-          onClose={() => setShowRemovePartModal(false)}
+          vinRecord={searchResults.find(r => r.id === showRemovePartModal)!}
+          onClose={() => setShowRemovePartModal(null)}
           onSuccess={() => {
             handleSearch(new Event('submit') as any);
           }}

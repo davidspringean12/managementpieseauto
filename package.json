@@ -12,7 +12,6 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
-
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",

@@ -1,20 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Toaster } from 'sonner';
 import { Navbar } from './components/Navbar';
 import { SearchVIN } from './components/SearchVIN';
 import { AddRecord } from './components/AddRecord';
 import { SearchLicensePlate } from './components/SearchLicensePlate';
+import { LoginForm } from './components/LoginForm';
+import { isAuthenticated } from './lib/auth';
 
 type Tab = 'search-vin' | 'search-plate' | 'add';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('search-vin');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(isAuthenticated());
+  }, []);
+
+  if (!isLoggedIn) {
+    return <LoginForm onLoginSuccess={() => setIsLoggedIn(true)} />;
+  }
 
   return (
     <>
       <Toaster position="top-right" richColors />
       <div className="min-h-screen bg-gray-100">
-        <Navbar />
+        <Navbar onLogout={() => setIsLoggedIn(false)} />
 
         <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-6">

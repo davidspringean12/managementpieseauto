@@ -5,9 +5,6 @@ interface LoginFormProps {
   onLoginSuccess: () => void;
 }
 
-const VALID_USERNAME = 'focuspart';
-const VALID_PASSWORD = 'tapqeq-sigsub-1forMy';
-
 export function LoginForm({ onLoginSuccess }: LoginFormProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -21,7 +18,10 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
     setIsLoading(true);
 
     setTimeout(() => {
-      if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+      if (
+        username === import.meta.env.VITE_VALID_USERNAME && 
+        password === import.meta.env.VITE_VALID_PASSWORD
+      ) {
         if (rememberMe) {
           localStorage.setItem('focuspart_auth', 'true');
           localStorage.setItem('focuspart_remember', 'true');

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LogIn, Loader2, AlertCircle, Settings } from 'lucide-react';
+import { LogIn, Loader2, AlertCircle } from 'lucide-react';
 
 interface LoginFormProps {
   onLoginSuccess: () => void;
@@ -39,20 +39,20 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-red-950 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-2xl w-full max-w-md overflow-hidden">
-        <div className="bg-black text-white px-8 py-6 text-center">
-          <div className="flex justify-center mb-3">
-            <Settings className="w-12 h-12 text-red-600" />
+        <div className="text-center">
+          <div className="flex justify-center">
+            <img 
+              src="/images/logo.png" 
+              alt="Focus Part Logo" 
+              className="w-32 h-32 object-contain"
+            />
           </div>
-          <h1 className="text-3xl font-bold">
-            Focus <span className="text-red-600">Part</span>
-          </h1>
-          <p className="text-gray-400 text-sm mt-1">Auto Parts Management System</p>
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-            <p className="text-gray-600 text-sm">Please sign in to continue</p>
+            <h2 className="text-2xl text-center font-bold text-gray-900 mb-2">Bine ati Revenit</h2>
+            <p className="text-gray-600 text-center text-sm">Va rugam intrati in cont pentru a continua</p>
           </div>
 
           {error && (
@@ -73,7 +73,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
               autoComplete="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
+              placeholder="Introduceti numele de utilizator"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all"
               required
               autoFocus
@@ -91,7 +91,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder="Introduceti parola"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all"
               required
             />
@@ -119,12 +119,12 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
             {isLoading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                Signing in...
+                Logging in...
               </>
             ) : (
               <>
                 <LogIn className="w-5 h-5" />
-                Sign In
+                Log In
               </>
             )}
           </button>
@@ -132,7 +132,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
 
         <div className="bg-gray-50 px-8 py-4 text-center border-t border-gray-200">
           <p className="text-xs text-gray-500">
-            Focus Part Auto Shop Management System
+            Focus Part SRL Sistem Management
           </p>
         </div>
       </div>

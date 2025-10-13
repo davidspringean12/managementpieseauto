@@ -42,7 +42,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
         <div className="text-center">
           <div className="flex justify-center">
             <img 
-              src="/images/logo.png" 
+              src="./images/logo.png" 
               alt="Focus Part Logo" 
               className="w-32 h-32 object-contain"
             />

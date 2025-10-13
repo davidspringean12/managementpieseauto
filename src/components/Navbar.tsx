@@ -17,7 +17,7 @@ export function Navbar({ onLogout }: NavbarProps) {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-4">
             <img
-              src="/images/logo.png"
+              src="./images/logo.png"
               alt="Company Logo"
               className="w-20 h-20 object-contain"
             />

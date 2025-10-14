@@ -178,7 +178,7 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
               type="text"
               value={vinNumber}
               onChange={(e) => setVinNumber(e.target.value)}
-              placeholder="Enter 17-character VIN..."
+              placeholder="Introduceti seria de sasiu din 17 caractere..."
               maxLength={17}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent font-mono"
               required
@@ -194,7 +194,7 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
               type="text"
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
-              placeholder="Enter client name..."
+              placeholder="Introduceti numele clientului..."
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
               required
             />
@@ -202,14 +202,14 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
 
           <div>
             <label htmlFor="license-plate" className="block text-sm font-medium text-gray-700 mb-2">
-              License Plate
+              Numar de Inmatriculare
             </label>
             <input
               id="license-plate"
               type="text"
               value={licensePlate}
               onChange={(e) => setLicensePlate(e.target.value)}
-              placeholder="Enter license plate..."
+              placeholder="Introduceti numarul de inmatriculare..."
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
               maxLength={10}
             />
@@ -218,7 +218,7 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
           <div>
             <div className="flex items-center justify-between mb-3">
               <label className="block text-sm font-medium text-gray-700">
-                Parts & Serial Numbers <span className="text-red-600">*</span>
+                Piesa si Cod de Identificare <span className="text-red-600">*</span>
               </label>
               <button
                 type="button"
@@ -226,7 +226,7 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
                 className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm flex items-center gap-1"
               >
                 <Plus className="w-4 h-4" />
-                Add Part
+                Adauga Piesa
               </button>
             </div>
 
@@ -238,8 +238,8 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
                       type="text"
                       value={part}
                       onChange={(e) => updatePart(index, e.target.value)}
-                      placeholder="Part name..."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                      placeholder="Nume piesa..."
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent font-mono"
                       required
                     />
                   </div>
@@ -248,7 +248,7 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
                       type="text"
                       value={serials[index]}
                       onChange={(e) => updateSerial(index, e.target.value)}
-                      placeholder="Serial number..."
+                      placeholder="Cod de identificare..."
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent font-mono"
                       required
                     />
@@ -258,7 +258,7 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
                       type="number"
                       value={prices[index]}
                       onChange={(e) => updatePrice(index, e.target.value)}
-                      placeholder="Price..."
+                      placeholder="Pret..."
                       min="0"
                       step="0.01"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
@@ -289,12 +289,12 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
               {isLoading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Saving...
+                  Se salveaza...
                 </>
               ) : (
                 <>
                   <Save className="w-5 h-5" />
-                  Save Record
+                  Salveaza Client
                 </>
               )}
             </button>
@@ -304,7 +304,7 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
               disabled={isLoading}
               className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Clear
+              Sterge
             </button>
           </div>
         </div>

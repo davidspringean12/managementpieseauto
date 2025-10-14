@@ -50,7 +50,7 @@ export function AddPartModal({ vinRecord, onClose, onSuccess }: AddPartModalProp
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Add New Part</h3>
+          <h3 className="text-lg font-semibold">Adauga Piesa Noua</h3>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
             <X className="w-5 h-5" />
           </button>
@@ -59,12 +59,13 @@ export function AddPartModal({ vinRecord, onClose, onSuccess }: AddPartModalProp
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Part Name
+              Nume Piesa
             </label>
             <input
               type="text"
               value={partName}
               onChange={(e) => setPartName(e.target.value)}
+              placeholder="Nume piesa..."
               className="w-full px-3 py-2 border rounded-md"
               required
             />
@@ -72,12 +73,13 @@ export function AddPartModal({ vinRecord, onClose, onSuccess }: AddPartModalProp
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Serial Number
+              Cod de Identificare
             </label>
             <input
               type="text"
               value={serialNumber}
               onChange={(e) => setSerialNumber(e.target.value)}
+              placeholder="Cod de identificare..."
               className="w-full px-3 py-2 border rounded-md"
               required
             />
@@ -95,7 +97,7 @@ export function AddPartModal({ vinRecord, onClose, onSuccess }: AddPartModalProp
             {isLoading ? (
               <Loader2 className="w-5 h-5 animate-spin mx-auto" />
             ) : (
-              'Add Part'
+              'Adauga Piesa'
             )}
           </button>
         </form>

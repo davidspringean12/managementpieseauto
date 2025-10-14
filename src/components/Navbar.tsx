@@ -33,7 +33,7 @@ export function Navbar({ onLogout }: NavbarProps) {
             className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            Logout
+            Iesi din Cont
           </button>
         </div>
       </div>

@@ -94,7 +94,7 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
       <form onSubmit={handleSearch} className="space-y-4">
         <div>
           <label htmlFor="vin-search" className="block text-sm font-medium text-gray-700 mb-2">
-            Search by VIN Number
+            Cauta Serie de Sasiu:
           </label>
           <div className="flex gap-2">
             <input
@@ -102,7 +102,7 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Enter VIN number..."
+              placeholder="Introduceti seria de sasiu..."
               className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
               maxLength={17}
             />
@@ -116,7 +116,7 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
               ) : (
                 <Search className="w-5 h-5" />
               )}
-              Search
+              Cauta
             </button>
           </div>
         </div>
@@ -132,28 +132,28 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
       {notFound && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-          <p className="text-yellow-800">No results found for VIN: {searchQuery}</p>
+          <p className="text-yellow-800">Nu a fost gasit nici-un rezultat pentru: {searchQuery}</p>
         </div>
       )}
 
       {searchResult && (
         <div className="bg-white border-2 border-black rounded-lg shadow-lg overflow-hidden">
           <div className="bg-black text-white px-6 py-4 flex items-center justify-between">
-            <h3 className="text-lg font-bold">VIN Record Details</h3>
+            <h3 className="text-lg font-bold">Detalii Rezultat</h3>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowAddPartModal(true)}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 text-sm"
               >
                 <Plus className="w-4 h-4" />
-                Add Part
+                Adauga Piesa
               </button>
               <button
                 onClick={() => setShowRemovePartModal(true)}
                 className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors flex items-center gap-2 text-sm"
               >
                 <Minus className="w-4 h-4" />
-                Remove Part
+                Elimina Piesa
               </button>
               <button
                 onClick={() => handleDelete(searchResult.id)}
@@ -161,31 +161,31 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2 text-sm"
               >
                 <Trash2 className="w-4 h-4" />
-                Delete
+                Sterge Client
               </button>
             </div>
           </div>
 
           <div className="p-6 space-y-4">
             <div>
-              <p className="text-sm font-medium text-gray-600">VIN Number</p>
+              <p className="text-sm font-medium text-gray-600">Serie de Sasiu:</p>
               <p className="text-lg font-mono font-bold text-black">{searchResult.vin_number}</p>
             </div>
 
             <div>
-              <p className="text-sm font-medium text-gray-600">License Plate</p>
+              <p className="text-sm font-medium text-gray-600">Numar Inmatriculare:</p>
               <p className="text-lg font-mono font-bold text-black">
                 {searchResult.license_plate || 'N/A'}
               </p>
             </div>
 
             <div>
-              <p className="text-sm font-medium text-gray-600">Client Name</p>
+              <p className="text-sm font-medium text-gray-600">Nume Client:</p>
               <p className="text-lg text-black">{searchResult.client_name}</p>
             </div>
 
             <div>
-              <p className="text-sm font-medium text-gray-600 mb-3">Detalii</p>
+              <p className="text-sm font-medium text-gray-600 mb-3">Detalii:</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {parseJsonArray(searchResult.parts_bought).map((part, index) => {
                   const serials = parseJsonArray(searchResult.part_serial_numbers);
@@ -199,15 +199,15 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
                       className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 hover:border-red-600 transition-colors"
                     >
                       <div className="mb-2">
-                        <p className="text-xs font-medium text-gray-500 uppercase">Part</p>
+                        <p className="text-xs font-medium text-gray-500 uppercase">Piesa:</p>
                         <p className="text-base font-semibold text-black mt-1">{part}</p>
                       </div>
                       <div className="mb-2">
-                        <p className="text-xs font-medium text-gray-500 uppercase">Serial Number</p>
+                        <p className="text-xs font-medium text-gray-500 uppercase">Cod de Identificare:</p>
                         <p className="text-sm font-mono text-gray-800 mt-1">{serials[index] || 'N/A'}</p>
                       </div>
                       <div>
-                        <p className="text-xs font-medium text-gray-500 uppercase">Price</p>
+                        <p className="text-xs font-medium text-gray-500 uppercase">Pret:</p>
                         <p className="text-sm font-semibold text-green-600 mt-1">
                           {prices[index] ? `${prices[index].toFixed(2)} RON` : 'N/A'}
                         </p>
@@ -220,7 +220,7 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
 
             <div className="pt-4 border-t border-gray-200">
               <p className="text-xs text-gray-500">
-                Created: {new Date(searchResult.created_at).toLocaleString()}
+                Creat: {new Date(searchResult.created_at).toLocaleString()}
               </p>
             </div>
           </div>

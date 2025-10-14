@@ -49,7 +49,7 @@ function App() {
                       : 'border-transparent text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  Cautare Numar Auto
+                  Cautare Numar Inmatriculare
                 </button>
                 <button
                   onClick={() => setActiveTab('add')}

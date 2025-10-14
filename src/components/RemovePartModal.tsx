@@ -50,7 +50,7 @@ export function RemovePartModal({ vinRecord, onClose, onSuccess }: RemovePartMod
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Remove Part</h3>
+          <h3 className="text-lg font-semibold">Elimina Piesa</h3>
           <button 
             type="button"
             onClick={onClose} 
@@ -73,7 +73,7 @@ export function RemovePartModal({ vinRecord, onClose, onSuccess }: RemovePartMod
               >
                 <p className="font-medium">{part}</p>
                 <p className="text-sm text-gray-600">
-                  Serial: {vinRecord.part_serial_numbers[index] || 'N/A'}
+                  Cod de Identificare: {vinRecord.part_serial_numbers[index] || 'N/A'}
                 </p>
               </div>
             ))}
@@ -89,7 +89,7 @@ export function RemovePartModal({ vinRecord, onClose, onSuccess }: RemovePartMod
               onClick={onClose}
               className="flex-1 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
             >
-              Cancel
+              Anuleaza
             </button>
             <button
               type="button"
@@ -100,7 +100,7 @@ export function RemovePartModal({ vinRecord, onClose, onSuccess }: RemovePartMod
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin mx-auto" />
               ) : (
-                'Remove Part'
+                'Elimina Piesa'
               )}
             </button>
           </div>

@@ -180,7 +180,7 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
               onChange={(e) => setVinNumber(e.target.value)}
               placeholder="Introduceti seria de sasiu din 17 caractere..."
               maxLength={17}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent font-mono"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
               required
             />
           </div>
@@ -239,7 +239,7 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
                       value={part}
                       onChange={(e) => updatePart(index, e.target.value)}
                       placeholder="Nume piesa..."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent font-mono"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
                       required
                     />
                   </div>
@@ -249,7 +249,7 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
                       value={serials[index]}
                       onChange={(e) => updateSerial(index, e.target.value)}
                       placeholder="Cod de identificare..."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent font-mono"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
                       required
                     />
                   </div>

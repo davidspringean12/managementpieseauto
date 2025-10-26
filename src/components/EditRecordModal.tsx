@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X, Save, Loader2, AlertCircle, Plus, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import type { VinRecord } from '../lib/database.types';
+import type { VinRecord, Database } from '../lib/database.types';
 
 interface EditRecordModalProps {
   vinRecord: VinRecord;
@@ -18,14 +18,14 @@ interface PartEntry {
 export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordModalProps) {
   const parseJsonArray = (json: unknown): string[] => {
     if (Array.isArray(json)) {
-      return json.map(String);
+      return json.map(item => item ? String(item) : '');
     }
     return [];
   };
 
   const parseNumberArray = (json: unknown): number[] => {
     if (Array.isArray(json)) {
-      return json.map(Number);
+      return json.map(item => typeof item === 'number' ? item : 0);
     }
     return [];
   };
@@ -85,6 +85,10 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
         setError(`Part ${i + 1}: Serial number is required`);
         return;
       }
+      if (parts[i].price < 0) {
+        setError(`Part ${i + 1}: Price cannot be negative`);
+        return;
+      }
     }
 
     setIsLoading(true);
@@ -99,8 +103,8 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
           parts_bought: parts.map(p => p.name.trim()),
           part_serial_numbers: parts.map(p => p.serialNumber.trim()),
           part_prices: parts.map(p => p.price),
-          notes: notes.trim(),
-        })
+          notes: notes.trim() || null,
+        } satisfies Database['public']['Tables']['vin_records']['Update'])
         .eq('id', vinRecord.id);
 
       if (updateError) throw updateError;

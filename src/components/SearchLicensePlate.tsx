@@ -19,6 +19,7 @@ export function SearchLicensePlate({ onDeleteSuccess }: SearchLicensePlateProps)
   const [notFound, setNotFound] = useState(false);
   const [showAddPartModal, setShowAddPartModal] = useState<string | null>(null); // Store record ID
   const [showRemovePartModal, setShowRemovePartModal] = useState<string | null>(null); // Store record ID
+  const [showEditModal, setShowEditModal] = useState<string | null>(null); // Store record ID
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -237,7 +238,7 @@ export function SearchLicensePlate({ onDeleteSuccess }: SearchLicensePlateProps)
 
             <div className="pt-4 border-t border-gray-200">
               <p className="text-xs text-gray-500">
-                Creat: {new Date(result.created_at).toLocaleString()}
+                Creat: {result.created_at ? new Date(result.created_at).toLocaleString() : 'N/A'}
               </p>
             </div>
           </div>
@@ -249,7 +250,7 @@ export function SearchLicensePlate({ onDeleteSuccess }: SearchLicensePlateProps)
           vinRecord={searchResults.find(r => r.id === showAddPartModal)!}
           onClose={() => setShowAddPartModal(null)}
           onSuccess={() => {
-            handleSearch(new Event('submit') as any);
+            handleSearch({ preventDefault: () => {} } as React.FormEvent);
           }}
         />
       )}
@@ -259,7 +260,17 @@ export function SearchLicensePlate({ onDeleteSuccess }: SearchLicensePlateProps)
           vinRecord={searchResults.find(r => r.id === showRemovePartModal)!}
           onClose={() => setShowRemovePartModal(null)}
           onSuccess={() => {
-            handleSearch(new Event('submit') as any);
+            handleSearch({ preventDefault: () => {} } as React.FormEvent);
+          }}
+        />
+      )}
+
+      {showEditModal && (
+        <EditRecordModal
+          vinRecord={searchResults.find(r => r.id === showEditModal)!}
+          onClose={() => setShowEditModal(null)}
+          onSuccess={() => {
+            handleSearch({ preventDefault: () => {} } as React.FormEvent);
           }}
         />
       )}

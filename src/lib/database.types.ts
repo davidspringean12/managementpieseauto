@@ -19,6 +19,7 @@ export type Database = {
           part_serial_numbers: string[]
           part_prices: number[]
           license_plate: string | null
+          notes: string | null
         }
         Insert: {
           vin_number: string
@@ -27,6 +28,7 @@ export type Database = {
           part_serial_numbers: string[]
           part_prices: number[]
           license_plate?: string | null
+          notes?: string | null
         }
         Update: {
           vin_number?: string
@@ -35,6 +37,7 @@ export type Database = {
           part_serial_numbers?: string[]
           part_prices?: number[]
           license_plate?: string | null
+          notes?: string | null
         }
       }
     }

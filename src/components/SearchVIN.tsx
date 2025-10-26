@@ -237,7 +237,7 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
 
             <div className="pt-4 border-t border-gray-200">
               <p className="text-xs text-gray-500">
-                Creat: {new Date(searchResult.created_at).toLocaleString()}
+                Creat: {searchResult.created_at ? new Date(searchResult.created_at).toLocaleString() : 'N/A'}
               </p>
             </div>
           </div>
@@ -249,7 +249,7 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
           vinRecord={searchResult}
           onClose={() => setShowAddPartModal(false)}
           onSuccess={() => {
-            handleSearch(new Event('submit') as any);
+            handleSearch({ preventDefault: () => {} } as React.FormEvent);
           }}
         />
       )}
@@ -259,7 +259,16 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
           vinRecord={searchResult}
           onClose={() => setShowRemovePartModal(false)}
           onSuccess={() => {
-            handleSearch(new Event('submit') as any);
+            handleSearch({ preventDefault: () => {} } as React.FormEvent);
+          }}
+        />
+      )}
+      {showEditModal && searchResult && (
+        <EditRecordModal
+          vinRecord={searchResult}
+          onClose={() => setShowEditModal(false)}
+          onSuccess={() => {
+            handleSearch({ preventDefault: () => {} } as React.FormEvent);
           }}
         />
       )}

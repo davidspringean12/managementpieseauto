@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Search, Trash2, AlertCircle, Loader2, Plus, Minus } from 'lucide-react';
+import { Search, Trash2, AlertCircle, Loader2, Plus, Minus, Edit, FileDown } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { VinRecord } from '../lib/database.types';
 import { AddPartModal } from './AddPartModal';
 import { RemovePartModal } from './RemovePartModal';
+import { EditRecordModal } from './EditRecordModal';
+import { exportToPDF } from '../lib/pdfExport';
 
 interface SearchLicensePlateProps {
   onDeleteSuccess?: () => void;
@@ -140,6 +142,20 @@ export function SearchLicensePlate({ onDeleteSuccess }: SearchLicensePlateProps)
           <div className="bg-black text-white px-6 py-4 flex items-center justify-between">
             <h3 className="text-lg font-bold">Detalii Rezultat</h3>
             <div className="flex gap-2">
+              <button
+                onClick={() => exportToPDF(result)}
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 text-sm"
+              >
+                <FileDown className="w-4 h-4" />
+                Export PDF
+              </button>
+              <button
+                onClick={() => setShowEditModal(result.id)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 text-sm"
+              >
+                <Edit className="w-4 h-4" />
+                Edit
+              </button>
               <button
                 onClick={() => setShowAddPartModal(result.id)}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 text-sm"

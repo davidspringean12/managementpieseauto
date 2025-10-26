@@ -236,6 +236,13 @@ export function SearchLicensePlate({ onDeleteSuccess }: SearchLicensePlateProps)
               </div>
             </div>
 
+            <div className="mt-4">
+              <p className="text-sm font-medium text-gray-600">Notite:</p>
+              <p className="text-base text-gray-800 mt-1 whitespace-pre-wrap">
+                {result.notes || 'Nu exista note pentru acest client'}
+              </p>
+            </div>
+
             <div className="pt-4 border-t border-gray-200">
               <p className="text-xs text-gray-500">
                 Creat: {result.created_at ? new Date(result.created_at).toLocaleString() : 'N/A'}

@@ -235,6 +235,13 @@ export function SearchVIN({ onDeleteSuccess }: SearchVINProps) {
               </div>
             </div>
 
+            <div className="mt-4">
+              <p className="text-sm font-medium text-gray-600">Notite:</p>
+              <p className="text-base text-gray-800 mt-1 whitespace-pre-wrap">
+                {searchResult.notes || 'Nu exista note pentru acest client'}
+              </p>
+            </div>
+
             <div className="pt-4 border-t border-gray-200">
               <p className="text-xs text-gray-500">
                 Creat: {searchResult.created_at ? new Date(searchResult.created_at).toLocaleString() : 'N/A'}

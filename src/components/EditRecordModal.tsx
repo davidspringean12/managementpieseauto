@@ -142,7 +142,7 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="vin-number" className="block text-sm font-medium text-gray-700 mb-2">
-                VIN Number <span className="text-red-600">*</span>
+                Serie de Sasiu <span className="text-red-600">*</span>
               </label>
               <input
                 id="vin-number"
@@ -158,22 +158,22 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
 
             <div>
               <label htmlFor="license-plate" className="block text-sm font-medium text-gray-700 mb-2">
-                License Plate
+                Numar de Inmatriculare
               </label>
               <input
                 id="license-plate"
                 type="text"
                 value={licensePlate}
                 onChange={(e) => setLicensePlate(e.target.value)}
-                placeholder="Enter license plate..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent font-mono"
+                placeholder="Introduceti numarul de inmatriculare..."
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
               />
             </div>
           </div>
 
           <div>
             <label htmlFor="client-name" className="block text-sm font-medium text-gray-700 mb-2">
-              Client Name <span className="text-red-600">*</span>
+              Nume Client <span className="text-red-600">*</span>
             </label>
             <input
               id="client-name"
@@ -188,7 +188,7 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
 
           <div>
             <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
-              Notes
+              Notite
             </label>
             <textarea
               id="notes"
@@ -203,7 +203,7 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
           <div>
             <div className="flex items-center justify-between mb-3">
               <label className="block text-sm font-medium text-gray-700">
-                Parts <span className="text-red-600">*</span>
+                Piese <span className="text-red-600">*</span>
               </label>
               <button
                 type="button"
@@ -211,7 +211,7 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
                 className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
               >
                 <Plus className="w-4 h-4" />
-                Add Part
+                Adauga Piesa
               </button>
             </div>
 
@@ -219,7 +219,7 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
               {parts.map((part, index) => (
                 <div key={index} className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-sm font-semibold text-gray-700">Part {index + 1}</h4>
+                    <h4 className="text-sm font-semibold text-gray-700">Piesa {index + 1}</h4>
                     {parts.length > 1 && (
                       <button
                         type="button"
@@ -233,7 +233,7 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">
-                        Part Name <span className="text-red-600">*</span>
+                        Nume Piesa <span className="text-red-600">*</span>
                       </label>
                       <input
                         type="text"
@@ -246,7 +246,7 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">
-                        Serial Number <span className="text-red-600">*</span>
+                        Cod de Identificare <span className="text-red-600">*</span>
                       </label>
                       <input
                         type="text"
@@ -259,7 +259,7 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">
-                        Price (RON)
+                        Pret (RON)
                       </label>
                       <input
                         type="number"
@@ -286,12 +286,12 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
               {isLoading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Saving...
+                  Se salveaza...
                 </>
               ) : (
                 <>
                   <Save className="w-5 h-5" />
-                  Save Changes
+                  Salveaza Modificarile
                 </>
               )}
             </button>
@@ -301,7 +301,7 @@ export function EditRecordModal({ vinRecord, onClose, onSuccess }: EditRecordMod
               disabled={isLoading}
               className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50"
             >
-              Cancel
+              Anuleaza
             </button>
           </div>
         </form>

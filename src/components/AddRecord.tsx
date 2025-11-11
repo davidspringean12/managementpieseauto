@@ -1,7 +1,9 @@
 import { supabase } from '../lib/supabase';
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import { Plus, X, Save, AlertCircle, Loader2 } from 'lucide-react';
+import { Plus, X, Save, AlertCircle, User, Hash, FileText } from 'lucide-react';
+import { Card, CardTitle, Button, Input } from './ui';
 
 interface AddRecordProps {
   onRecordAdded?: () => void;
@@ -121,13 +123,14 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
         client_name: clientName.trim(),
         parts_bought: filteredParts,
         part_serial_numbers: filteredSerials,
-        part_prices: filteredPrices, // Now this is an array of numbers
+        part_prices: filteredPrices,
       };
       
       console.log('Sending data:', recordData);
 
       const { data, error: insertError } = await supabase
         .from('vin_records')
+        // @ts-expect-error - Supabase type inference issue with array fields
         .insert(recordData)
         .select()
         .single();
@@ -156,159 +159,164 @@ export function AddRecord({ onRecordAdded }: AddRecordProps) {
 
   return (
     <div className="space-y-6">
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-          <p className="text-red-800">{error}</p>
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            <Card variant="light" className="border-2 border-brand-red bg-red-50">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-brand-red flex-shrink-0 mt-0.5" />
+                <p className="text-red-800 font-medium">{error}</p>
+              </div>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <form onSubmit={handleSubmit} className="bg-white border-2 border-black rounded-lg shadow-lg overflow-hidden">
-        <div className="bg-black text-white px-6 py-4">
-          <h3 className="text-lg font-bold">Adauga Client Nou</h3>
+      <Card animated className="border-4 border-brand-charcoal overflow-hidden">
+        <div className="bg-gradient-to-r from-brand-charcoal to-brand-charcoal-light text-white px-6 py-5 -m-6 mb-6">
+          <CardTitle className="text-white text-xl">Adauga Client Nou</CardTitle>
         </div>
 
-        <div className="p-6 space-y-6">
-          <div>
-            <label htmlFor="vin" className="block text-sm font-medium text-gray-700 mb-2">
-              Serie de Sasiu <span className="text-red-600">*</span>
-            </label>
-            <input
+        <form onSubmit={handleSubmit}>
+
+          <div className="space-y-6">
+            <Input
               id="vin"
               type="text"
               value={vinNumber}
               onChange={(e) => setVinNumber(e.target.value)}
               placeholder="Introduceti seria de sasiu din 17 caractere..."
               maxLength={17}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
+              label="Serie de Sasiu *"
+              icon={<Hash className="w-5 h-5" />}
               required
             />
-          </div>
 
-          <div>
-            <label htmlFor="client" className="block text-sm font-medium text-gray-700 mb-2">
-              Nume Client <span className="text-red-600">*</span>
-            </label>
-            <input
+            <Input
               id="client"
               type="text"
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
               placeholder="Introduceti numele clientului..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
+              label="Nume Client *"
+              icon={<User className="w-5 h-5" />}
               required
             />
-          </div>
 
-          <div>
-            <label htmlFor="license-plate" className="block text-sm font-medium text-gray-700 mb-2">
-              Numar de Inmatriculare
-            </label>
-            <input
+            <Input
               id="license-plate"
               type="text"
               value={licensePlate}
               onChange={(e) => setLicensePlate(e.target.value)}
               placeholder="Introduceti numarul de inmatriculare..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
+              label="Numar de Inmatriculare"
+              icon={<FileText className="w-5 h-5" />}
               maxLength={10}
             />
-          </div>
 
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <label className="block text-sm font-medium text-gray-700">
-                Piesa si Cod de Identificare <span className="text-red-600">*</span>
-              </label>
-              <button
-                type="button"
-                onClick={addPartField}
-                className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm flex items-center gap-1"
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                  Piesa si Cod de Identificare <span className="text-brand-red">*</span>
+                </label>
+                <Button
+                  type="button"
+                  onClick={addPartField}
+                  variant="primary"
+                  size="sm"
+                  icon={<Plus className="w-4 h-4" />}
+                >
+                  Adauga Piesa
+                </Button>
+              </div>
+
+              <div className="space-y-3">
+                {parts.map((part, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="flex gap-2 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 hover:border-brand-red transition-all"
+                  >
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        value={part}
+                        onChange={(e) => updatePart(index, e.target.value)}
+                        placeholder="Nume piesa..."
+                        className="input-field"
+                        required
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        value={serials[index]}
+                        onChange={(e) => updateSerial(index, e.target.value)}
+                        placeholder="Cod de identificare..."
+                        className="input-field"
+                        required
+                      />
+                    </div>
+                    <div className="w-32">
+                      <input
+                        type="number"
+                        value={prices[index]}
+                        onChange={(e) => updatePrice(index, e.target.value)}
+                        placeholder="Pret..."
+                        min="0"
+                        step="0.01"
+                        className="input-field"
+                        required
+                      />
+                    </div>
+                    {parts.length > 1 && (
+                      <motion.button
+                        type="button"
+                        onClick={() => removePartField(index)}
+                        whileHover={{ scale: 1.1, rotate: 90 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="px-3 py-3 bg-red-100 text-brand-red rounded-lg hover:bg-red-200 transition-colors"
+                        title="Remove part"
+                      >
+                        <X className="w-5 h-5" />
+                      </motion.button>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                isLoading={isLoading}
+                icon={!isLoading && <Save className="w-5 h-5" />}
+                className="flex-1"
               >
-                <Plus className="w-4 h-4" />
-                Adauga Piesa
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {parts.map((part, index) => (
-                <div key={index} className="flex gap-2">
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      value={part}
-                      onChange={(e) => updatePart(index, e.target.value)}
-                      placeholder="Nume piesa..."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
-                      required
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      value={serials[index]}
-                      onChange={(e) => updateSerial(index, e.target.value)}
-                      placeholder="Cod de identificare..."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
-                      required
-                    />
-                  </div>
-                  <div className="w-32">
-                    <input
-                      type="number"
-                      value={prices[index]}
-                      onChange={(e) => updatePrice(index, e.target.value)}
-                      placeholder="Pret..."
-                      min="0"
-                      step="0.01"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
-                      required
-                    />
-                  </div>
-                  {parts.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removePartField(index)}
-                      className="px-3 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
-                      title="Remove part"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  )}
-                </div>
-              ))}
+                {isLoading ? 'Se salveaza...' : 'Salveaza Client'}
+              </Button>
+              <Button
+                type="button"
+                onClick={resetForm}
+                variant="ghost"
+                size="lg"
+                disabled={isLoading}
+              >
+                Sterge
+              </Button>
             </div>
           </div>
-
-          <div className="flex gap-3 pt-4">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-medium"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Se salveaza...
-                </>
-              ) : (
-                <>
-                  <Save className="w-5 h-5" />
-                  Salveaza Client
-                </>
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={resetForm}
-              disabled={isLoading}
-              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Sterge
-            </button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </Card>
     </div>
   );
 }
